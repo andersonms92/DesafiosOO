@@ -1,6 +1,6 @@
 package paciente
 
-import vacinacao.VacinacaoMasculina
+import vacinacao.VacinacaoFeminina
 
 class PacienteFeminino(
     nome: String,
@@ -9,5 +9,5 @@ class PacienteFeminino(
     sexo: String,
     gravida: Boolean
 
-) : Paciente(nome, idade, contaminado, sexo, gravida, VacinacaoMasculina()) {
+) : Paciente(nome, idade, contaminado, sexo, gravida, VacinacaoFeminina()) {
 }
