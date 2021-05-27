@@ -13,9 +13,9 @@ import com.example.data.remote.NewsRetrofit
 
 class ArticlesActivity : AppCompatActivity() {
 
-    private lateinit var newsRecyclerView: RecyclerView
+    private lateinit var articlesRecycleView: RecyclerView
     private lateinit var articlesAdapter: ArticlesAdapter
-    private lateinit var newsLayoutManager: LinearLayoutManager
+    private lateinit var articlesLayoutManager: LinearLayoutManager
     private var articleNewsPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,25 +25,26 @@ class ArticlesActivity : AppCompatActivity() {
         val button: Button = findViewById(R.id.btn_voltar)
 
         val extras = intent.extras
+
         if (extras != null) {
-            newsRecyclerView = findViewById(R.id.rv_news)
-            newsLayoutManager = LinearLayoutManager(
+            articlesRecycleView = findViewById(R.id.rv_news)
+            articlesLayoutManager = LinearLayoutManager(
                 this,
                 LinearLayoutManager.VERTICAL,
                 false
             )
-            newsRecyclerView.layoutManager = newsLayoutManager
+            articlesRecycleView.layoutManager = articlesLayoutManager
             articlesAdapter = ArticlesAdapter(mutableListOf())
-            newsRecyclerView.adapter = articlesAdapter
+            articlesRecycleView.adapter = articlesAdapter
 
             extras.getString(ARTICLE_URL)?.let { getNews(it) }
         } else {
             finish()
         }
 
-       button.setOnClickListener {
+        button.setOnClickListener {
            finish()
-       }
+        }
     }
 
     fun getNews(url: String) {
@@ -55,24 +56,32 @@ class ArticlesActivity : AppCompatActivity() {
         )
     }
 
+    fun scrollNews() {
+        NewsRetrofit.getNews(
+            articleNewsPage,
+            ::onNewsFetched,
+            ::onError
+        )
+    }
+
     private fun attachNewsOnScrollListener() {
-        newsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        articlesRecycleView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val totalItemCount = newsLayoutManager.itemCount
-                val visibleItemCount = newsLayoutManager.childCount
-                val firstVisibleItem = newsLayoutManager.findFirstVisibleItemPosition()
+                val totalItemCount = articlesLayoutManager.itemCount
+                val visibleItemCount = articlesLayoutManager.childCount
+                val firstVisibleItem = articlesLayoutManager.findFirstVisibleItemPosition()
 
                 if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                    newsRecyclerView.removeOnScrollListener(this)
+                    articlesRecycleView.removeOnScrollListener(this)
                     articleNewsPage++
-                    getNews(ARTICLE_URL)
+                    scrollNews()
                 }
             }
         })
     }
 
-    private fun onNewsFetched(news: List<ArticlesModel>) {
-        articlesAdapter.updateNews(news)
+    private fun onNewsFetched(articles: List<ArticlesModel>) {
+        articlesAdapter.updateNews(articles)
         attachNewsOnScrollListener()
     }
 

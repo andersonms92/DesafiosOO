@@ -9,9 +9,9 @@ import retrofit2.http.Url
 interface NewsApi {
     @GET("v2/everything")
     fun getArticles(
-        @Query("apiKey") apiKey: String = "c26a3c60aa3e4a02a946270050ec6aec",
+        @Query("apiKey") apiKey: String = "df7de9ae3c254fb5a21a966f213d6310",
         @Query("page") page: Int,
-        @Query("q") q: String
+        @Query("q", encoded = true) q: String
     ): Call<NewsModel>
 
 }

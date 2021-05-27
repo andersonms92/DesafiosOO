@@ -30,11 +30,11 @@ class ArticlesAdapter(
 
     override fun getItemCount(): Int = articles.size
 
-    fun updateNews(news: List<ArticlesModel>) {
-        this.articles.addAll(news)
+    fun updateNews(articles: List<ArticlesModel>) {
+        this.articles.addAll(articles)
         notifyItemRangeInserted(
             this.articles.size,
-            news.size
+            articles.size -1
         )
     }
 
